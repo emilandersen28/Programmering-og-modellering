@@ -1,0 +1,89 @@
+class Robot_arm
+
+instance variables
+    
+    t : seq of real; 
+    q : seq of real;
+    qt : seq of real;
+    public motor_state: seq of nat;
+    public errorCorrection : seq of real;
+
+values
+
+    N1 : real = 0.0;
+    N2 : real = 3.14/2;
+
+operations
+    
+    public Robot_arm : () ==> Robot_arm
+    Robot_arm() == (
+        t := [0.0]; -- time
+        q := [0.0]; -- angle of joint
+        qt := [0.0]; -- Target angle of joint
+        errorCorrection := [0.0];
+        motor_state := [0];
+    );
+
+    public motorOn : () ==> ()
+    motorOn () == duration (0) (
+        t := [hd t + 1] ^ t;
+        motor_state := [1] ^ motor_state;
+        errorCorrection := [hd errorCorrection] ^ errorCorrection;
+        q := [hd q] ^ q;
+        qt := [hd qt] ^ qt;
+    );
+
+    public motorOff : () ==> ()
+    motorOff () == duration (0) (
+        t := [hd t + 1] ^ t;
+        motor_state := [0] ^ motor_state;
+        errorCorrection := [hd errorCorrection] ^ errorCorrection;
+        q := [hd q] ^ q;
+        qt := [hd qt] ^ qt;
+    );
+
+    public setTarget : real ==> ()
+    setTarget (target) == duration (0) (
+        t := [hd t + 1] ^ t;
+        motor_state := [hd motor_state] ^ motor_state;
+        errorCorrection := [hd errorCorrection] ^ errorCorrection;
+        q := [hd q] ^ q;
+        if (target >= N1 and target <= N2) then
+            qt := [target] ^ qt
+        else qt := [hd qt] ^ qt;
+    );
+
+    public setErrorCorrection : real ==> ()
+    setErrorCorrection (errorCorr) == duration (0) (
+        t := [hd t + 1] ^ t;
+        motor_state := [hd motor_state] ^ motor_state;
+        q := [hd q] ^ q;
+        qt := [hd qt] ^ qt;
+        errorCorrection := [errorCorr] ^ errorCorrection;
+    );
+
+    public step : real ==> ()
+    step(delta) == duration (0) (
+
+        dcl curr_motor_state : nat := hd motor_state;
+        dcl curr_q : real := hd q;
+        dcl curr_qt : real := hd qt;
+        
+        dcl delta_q : real := curr_motor_state * delta * (curr_qt - curr_q) * hd errorCorrection;
+        
+        t := [hd t + 1] ^ t;
+        motor_state := [curr_motor_state] ^ motor_state;
+        errorCorrection := [hd errorCorrection] ^ errorCorrection;
+        q := [curr_q + delta_q] ^ q;
+        qt := [curr_qt] ^ qt;
+
+        
+    ) 
+    pre (hd q >= N1 and hd q <= N2 and (hd qt - hd q) * hd errorCorrection * hd motor_state * delta >= N1 and (hd qt - hd q) * hd errorCorrection * hd motor_state * delta <= N2)
+    post (hd q >= N1 and hd q <= N2)
+    
+
+end Robot_arm
+
+
+
