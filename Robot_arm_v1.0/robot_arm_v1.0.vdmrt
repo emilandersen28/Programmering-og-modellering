@@ -79,7 +79,8 @@ operations
 
         
     ) 
-    pre (hd q >= N1 and hd q <= N2 and (hd qt - hd q) * hd errorCorrection * hd motor_state * delta >= N1 and (hd qt - hd q) * hd errorCorrection * hd motor_state * delta <= N2)
+    pre (hd q >= N1 and hd q <= N2 and hd qt >= N1 and hd qt <= N2 and (hd qt - hd q) * hd errorCorrection * hd motor_state 
+    * delta >= N1 and (hd qt - hd q) * hd errorCorrection * hd motor_state * delta <= N2)
     post (hd q >= N1 and hd q <= N2)
     
 
