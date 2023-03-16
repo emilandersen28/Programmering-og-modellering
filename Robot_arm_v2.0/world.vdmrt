@@ -209,10 +209,10 @@ operations
         return true;
     );
 
-    public Scenario7 : () ==> bool
-    Scenario7() == (
+    public Scenario6 : () ==> bool
+    Scenario6() == (
         echoState(0);
-        RobotSystem`Robot.setErrorCorrection(1.5);
+        RobotSystem`Robot.setErrorCorrection(0.8);
         echoState(1);
         RobotSystem`Robot_controller.setTarget(3.14/4);
         echoState(2);
@@ -248,41 +248,42 @@ operations
         return true;
     );
     
-    public Scenario8 : () ==> bool
-    Scenario8() == (
+    public Scenario7 : () ==> bool
+    Scenario7() == (
         echoState(0);
         RobotSystem`Robot.setErrorCorrection(0.8);
         echoState(1);
         RobotSystem`Robot_controller.setTarget(3.14/4);
         echoState(2);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(3);
         RobotSystem`Robot_controller.controlArm();
+        echoState(3);
+        RobotSystem`Robot_controller.monitorArm();
         echoState(4);
         RobotSystem`Robot.step(1);
         echoState(5);
-        RobotSystem`Robot_controller.monitorArm();
+        -- no monitoring here --
         echoState(6);
         RobotSystem`Robot_controller.controlArm();
         echoState(7);
         RobotSystem`Robot.step(1);
         echoState(8);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(9);
         RobotSystem`Robot_controller.controlArm();
+        echoState(9);
+        RobotSystem`Robot_controller.monitorArm();
         echoState(10);
         RobotSystem`Robot.step(1);
         echoState(11);
-        RobotSystem`Robot_controller.monitorArm();
+        -- no monitoring here --
         echoState(12);
         RobotSystem`Robot_controller.controlArm();
         echoState(13);
         RobotSystem`Robot.step(1);
         echoState(14);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(15);
         RobotSystem`Robot_controller.controlArm();
+        echoState(15);
+        RobotSystem`Robot_controller.monitorArm();
         echoState(16);
+        -- controlArm() has outdated monitoring info thus it will turn the motor off later than necessary --
 
         return true;
     );
