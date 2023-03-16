@@ -10,7 +10,7 @@ values
 
     N1 : real = 0.0;
     N2 : real = 3.14/2;
-    ERROR_MARGIN : real = 0.01;
+    ERROR_MARGIN : real = 0.1;
 
 operations
 
