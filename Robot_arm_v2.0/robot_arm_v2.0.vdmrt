@@ -1,0 +1,43 @@
+class Robot_arm
+
+instance variables
+    public env_q : real;
+    public env_qt : real;
+    public env_motor_state: nat;
+    public env_errorCorrection : real;
+
+values
+
+    N1 : real = 0.0;
+    N2 : real = 3.14/2;
+
+operations
+    
+    public Robot_arm : () ==> Robot_arm
+    Robot_arm() == (
+        env_q := 0.0; -- angle of joint
+        env_qt := 0.0; -- Target angle of joint
+        env_errorCorrection := 0.0;
+        env_motor_state := 0;
+    );
+
+
+
+    public setErrorCorrection : real ==> ()
+    setErrorCorrection (errorCorr) == duration (0) (
+        env_errorCorrection := errorCorr;
+    );
+
+    public step : real ==> ()
+    step(delta) == duration (0) (
+        
+        dcl delta_q : real := env_motor_state * delta * (env_qt - env_q) *  env_errorCorrection;
+        
+        env_q := env_q + delta_q;
+    ) 
+    pre (env_q >= N1 and  env_q <= N2 and  env_qt >= N1 and  env_qt <= N2 and ( env_qt -  env_q) *  env_errorCorrection *  env_motor_state 
+    * delta >= N1 and ( env_qt -  env_q) *  env_errorCorrection *  env_motor_state * delta <= N2)
+    post (env_q >= N1 and  env_q <= N2)
+    
+
+end Robot_arm

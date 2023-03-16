@@ -1,0 +1,94 @@
+class World
+
+instance variables
+    io : IO := new IO();
+
+operations
+    
+    public ecchoState : (nat) ==> ()
+    echoState(counter) == (
+        dcl succ : bool
+        dcl str : seq of char := "";
+        str := str ^ VDMUtil`val2seq_of_char[nat](counter);
+    )
+
+    public Scenario1 : () ==> bool
+    Scenario1() == (
+        RobotSystem`Robot.motorOn();
+        RobotSystem`Robot.setErrorCorrection(1.5);
+        RobotSystem`Robot.setTarget(3.14/4);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.motorOff();
+
+        return true;
+    );
+    
+    public Scenario2 : () ==> bool
+    Scenario2() == (
+        RobotSystem`Robot.motorOn();
+        RobotSystem`Robot.setErrorCorrection(0.8);
+        RobotSystem`Robot.setTarget(3.14/4);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.motorOff();
+        return true;
+    );
+
+    public Scenario3 : () ==> bool
+    Scenario3() == (
+        RobotSystem`Robot.motorOn();
+        RobotSystem`Robot.setErrorCorrection(1);
+        RobotSystem`Robot.setTarget(3.14/4);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.motorOff();
+        return true;
+    );
+    public Scenario4 : () ==> bool
+    Scenario4() == (
+        RobotSystem`Robot.motorOn();
+        RobotSystem`Robot.setErrorCorrection(0.2);
+        RobotSystem`Robot.setTarget(3.14/4);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.step(1);
+        RobotSystem`Robot.motorOff();
+        return true;
+    );
+
+end World

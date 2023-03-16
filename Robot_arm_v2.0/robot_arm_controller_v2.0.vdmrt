@@ -1,0 +1,55 @@
+class Robot_arm_controller
+    
+instance variables
+
+    public ctl_q : real;
+    public ctl_qt : real;
+    public ctl_motor_state: nat;
+
+values 
+
+    N1 : real = 0.0;
+    N2 : real = 3.14/2;
+    ERROR_MARGIN : real = 0.01;
+
+operations
+
+    public Robot_arm_controller : () ==> Robot_arm_controller
+    Robot_arm_controller() == (
+        ctl_q := 0.0; -- angle of joint
+        ctl_qt := 0.0; -- Target angle of joint
+        ctl_motor_state := 0;
+    );
+
+    public motorOn : () ==> ()
+    motorOn () == duration (0) (
+        ctl_motor_state := 1;
+        RobotSystem`Robot.env_motor_state := 1;
+    );
+
+    public motorOff : () ==> ()
+    motorOff () == duration (0) (
+        ctl_motor_state := 0;
+        RobotSystem`Robot.env_motor_state := 0;
+    );
+
+    public setTarget : real ==> ()
+    setTarget (target) == duration (0) (
+        if (target >= N1 and target <= N2) then
+            ctl_qt := target;
+            RobotSystem`Robot.env_qt := target;
+    );
+
+    public monitorArm : () ==> ()
+    monitorArm () == duration (0) (
+        ctl_q := RobotSystem`Robot.env_q;
+    );
+
+    public controlArm : () ==> ()
+    controlArm () == duration (0) 
+        if (abs(ctl_qt - ctl_q) > ERROR_MARGIN) then
+            motorOn()
+        else
+            motorOff();
+
+end Robot_arm_controller

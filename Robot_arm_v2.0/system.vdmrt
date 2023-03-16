@@ -1,0 +1,6 @@
+system RobotSystem
+instance variables
+    public static Robot:Robot_arm := new Robot_arm();
+    public static Robot_controller:Robot_arm_controller := new Robot_arm_controller();
+
+end RobotSystem
