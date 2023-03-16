@@ -35,8 +35,6 @@ operations
         
         env_q := env_q + delta_q;
     ) 
-    -- pre (env_q >= N1 and  env_q <= N2 and  env_qt >= N1 and  env_qt <= N2 and ( env_qt -  env_q) *  env_errorCorrection *  env_motor_state 
-    -- * delta >= N1 and ( env_qt -  env_q) *  env_errorCorrection *  env_motor_state * delta <= N2)
     pre (delta > 0 and N1 <= env_qt and env_qt <= N2)
     post (env_q >= N1 and  env_q <= N2)
     

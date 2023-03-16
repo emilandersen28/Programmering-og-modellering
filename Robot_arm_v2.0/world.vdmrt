@@ -56,6 +56,161 @@ operations
 
     public Scenario1 : () ==> bool
     Scenario1() == (
+        RobotSystem`Robot_controller.motorOn();
+        echoState(0);
+        RobotSystem`Robot.setErrorCorrection(1.5);
+        echoState(1);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        echoState(2);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(3);
+        RobotSystem`Robot.step(1);
+        echoState(4);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(5);
+        RobotSystem`Robot.step(1);
+        echoState(6);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(7);
+        RobotSystem`Robot.step(1);
+        echoState(8);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(9);
+        RobotSystem`Robot.step(1);
+        echoState(10);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(11);
+        RobotSystem`Robot_controller.motorOff();
+
+        return true;
+    );
+    
+    public Scenario2 : () ==> bool
+    Scenario2() == (
+        RobotSystem`Robot_controller.motorOn();
+        echoState(0);
+        RobotSystem`Robot.setErrorCorrection(0.8);
+        echoState(1);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        echoState(2);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(3);
+        RobotSystem`Robot.step(1);
+        echoState(4);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(5);
+        RobotSystem`Robot.step(1);
+        echoState(6);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(7);
+        RobotSystem`Robot.step(1);
+        echoState(8);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(9);
+        RobotSystem`Robot.step(1);
+        echoState(10);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(11);
+        RobotSystem`Robot_controller.motorOff();
+
+        return true;
+    );
+
+    public Scenario3 : () ==> bool
+    Scenario3() == (
+        RobotSystem`Robot_controller.motorOn();
+        echoState(0);
+        RobotSystem`Robot.setErrorCorrection(1);
+        echoState(1);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        echoState(2);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(3);
+        RobotSystem`Robot.step(1);
+        echoState(4);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(5);
+        RobotSystem`Robot.step(1);
+        echoState(6);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(7);
+        RobotSystem`Robot.step(1);
+        echoState(8);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(9);
+        RobotSystem`Robot_controller.motorOff();
+        return true;
+    );
+    public Scenario4 : () ==> bool
+    Scenario4() == (
+        RobotSystem`Robot_controller.motorOn();
+        echoState(0);
+        RobotSystem`Robot.setErrorCorrection(0.2);
+        echoState(1);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        echoState(2);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(3);
+        RobotSystem`Robot.step(1);
+        echoState(4);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(5);
+        RobotSystem`Robot.step(1);
+        echoState(6);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(7);
+        RobotSystem`Robot.step(1);
+        echoState(8);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(9);
+        RobotSystem`Robot.step(1);
+        echoState(10);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(11);
+        RobotSystem`Robot.step(1);
+        echoState(12);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(13);
+        RobotSystem`Robot.step(1);
+        echoState(14);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(15);
+        RobotSystem`Robot_controller.motorOff();
+        return true;
+    );
+
+    public Scenario5 : () ==> bool
+    Scenario5() == (
+        RobotSystem`Robot_controller.motorOn();
+        echoState(0);
+        RobotSystem`Robot.setErrorCorrection(0.8);
+        echoState(1);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        echoState(2);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(3);
+        RobotSystem`Robot.step(1);
+        echoState(4);
+        -- no monitoring here --
+        echoState(5);
+        RobotSystem`Robot.step(1);
+        echoState(6);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(7);
+        RobotSystem`Robot.step(1);
+        echoState(8);
+        -- no monitoring here --
+        echoState(9);
+        RobotSystem`Robot.step(1);
+        echoState(10);
+        RobotSystem`Robot_controller.monitorArm();
+        echoState(11);
+        RobotSystem`Robot_controller.motorOff();
+        return true;
+    );
+
+    public Scenario7 : () ==> bool
+    Scenario7() == (
         echoState(0);
         RobotSystem`Robot.setErrorCorrection(1.5);
         echoState(1);
@@ -93,8 +248,8 @@ operations
         return true;
     );
     
-    public Scenario2 : () ==> bool
-    Scenario2() == (
+    public Scenario8 : () ==> bool
+    Scenario8() == (
         echoState(0);
         RobotSystem`Robot.setErrorCorrection(0.8);
         echoState(1);
@@ -131,127 +286,5 @@ operations
 
         return true;
     );
-
-    public Scenario3 : () ==> bool
-    Scenario3() == (
-        echoState(0);
-        RobotSystem`Robot.setErrorCorrection(1);
-        echoState(1);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-        echoState(2);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(3);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(4);
-        RobotSystem`Robot.step(1);
-        echoState(5);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(6);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(7);
-        RobotSystem`Robot.step(1);
-        echoState(8);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(9);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(10);
-        RobotSystem`Robot.step(1);
-        echoState(11);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(12);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(13);
-        return true;
-    );
-    public Scenario4 : () ==> bool
-    Scenario4() == (
-        echoState(0);
-        RobotSystem`Robot.setErrorCorrection(0.2);
-        echoState(1);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-        echoState(2);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(3);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(4);
-        RobotSystem`Robot.step(1);
-        echoState(5);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(6);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(7);
-        RobotSystem`Robot.step(1);
-        echoState(8);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(9);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(10);
-        RobotSystem`Robot.step(1);
-        echoState(11);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(12);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(13);
-        RobotSystem`Robot.step(1);
-        echoState(14);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(15);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(16);
-        RobotSystem`Robot.step(1);
-        echoState(17);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(18);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(19);
-        RobotSystem`Robot.step(1);
-        echoState(20);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(21);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(22);
-        return true;
-    );
-
-     public Scenario5 : () ==> bool
-    Scenario5() == (
-        echoState(0);
-        RobotSystem`Robot.setErrorCorrection(0.8);
-        echoState(1);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-        echoState(2);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(3);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(4);
-        RobotSystem`Robot.step(1);
-        echoState(5);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(6);
-        -- no monitoring here --
-        echoState(7);
-        RobotSystem`Robot.step(1);
-        echoState(8);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(9);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(10);
-        RobotSystem`Robot.step(1);
-        echoState(11);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(12);
-        -- no monitoring here --
-        echoState(13);
-        RobotSystem`Robot.step(1);
-        echoState(14);
-        RobotSystem`Robot_controller.controlArm();
-        echoState(15);
-        RobotSystem`Robot_controller.monitorArm();
-        echoState(16);
-        -- controlArm() function doesnt have as updated info thus resulting in the motor running too long --
-        return true;
-    );
-
-    
 
 end World
