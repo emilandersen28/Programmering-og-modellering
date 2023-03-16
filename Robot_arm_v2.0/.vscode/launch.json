@@ -1,12 +1,12 @@
 {
     "configurations": [
         {
-            "name": "Lens config: Debug World`Scenario6",
+            "name": "Lens config: Debug World`Scenario7",
             "type": "vdm",
             "request": "launch",
             "noDebug": false,
             "defaultName": "World",
-            "command": "p new World().Scenario6()"
+            "command": "p new World().Scenario7()"
         }
     ]
 }
