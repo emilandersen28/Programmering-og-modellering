@@ -1,0 +1,61 @@
+class Robot_arm_controller
+    
+instance variables
+
+    private ctl_q : real;
+    private ctl_qt : real;
+    private ctl_motor_state: Robot_arm`MotorState;
+
+values 
+
+    N1 : real = 0.0;
+    N2 : real = 3.14/2;
+    Q_em : real = 0.01; -- error margin
+
+thread
+    periodic (5e9, 0, 0, 0)(loop);
+
+
+operations
+
+    public Robot_arm_controller : () ==> Robot_arm_controller
+    Robot_arm_controller() == (
+        ctl_q := 0.0; -- angle of joint
+        ctl_qt := 0.0; -- Target angle of joint
+        ctl_motor_state := <OFF>;
+    );
+
+    public setMotorState : (Robot_arm`MotorState) ==> ()
+    setMotorState (s) == duration (1e8) ( -- 0.1 sec
+        RobotSystem`Robot.setMotorState(s);
+        ctl_motor_state := RobotSystem`Robot.getMotorState();
+    );
+
+
+    public setTarget : real ==> ()
+    setTarget (target) == duration (1e8) ( -- 0.1 sec
+        if (target >= N1 and target <= N2) then
+            ctl_qt := target;
+            RobotSystem`Robot.setTargetAngle(target);
+    );
+
+    public monitorArm : () ==> ()
+    monitorArm () == duration (1e8) ( -- 0.1 sec
+        ctl_q := RobotSystem`Robot.getArmAngle();
+    );
+
+    public controlArm : () ==> ()
+    controlArm () == duration (5e8) ( -- 0.5 sec
+        if (abs(ctl_qt - ctl_q) > Q_em) then
+            setMotorState(<ON>)
+        else
+            setMotorState(<OFF>);
+    );
+
+    private loop : () ==> ()
+    loop () == (
+        monitorArm();
+        controlArm();
+    );
+
+end Robot_arm_controller

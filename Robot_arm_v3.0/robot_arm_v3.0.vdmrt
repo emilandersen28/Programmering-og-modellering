@@ -1,0 +1,110 @@
+class Robot_arm
+
+types 
+    public MotorState = <ON> | <OFF>;
+
+instance variables
+    private env_q : real;
+    private env_qt : real;
+    private env_motor_state: MotorState;
+    private env_errorCorrection : real;
+    private last_time : real;
+    private final_sim_time : real;
+    public state_history : seq of (real * real * real)
+
+values
+    N1 : real = 0.0;
+    N2 : real = 3.14/2;
+
+sync
+    mutex(getArmAngle, step); -- getArmAngle and step are mutually exclusive
+    mutex(getMotorState, setMotorState); -- getMotorState and setMotorState are mutually exclusive
+    
+    per isFinished => (time > final_sim_time); -- isFinished is true when time > final_sim_time
+
+thread
+    periodic (1e8, 0, 0, 0)(step)
+
+
+operations 
+    public Robot_arm : () ==> Robot_arm
+    Robot_arm() == (
+        env_q := 0.0; -- angle of joint
+        env_qt := 0.0; -- Target angle of joint
+        env_errorCorrection := 0.0;
+        env_motor_state := <OFF>;
+        last_time := 0.0;
+        final_sim_time := 0.0;
+        state_history := [];
+    );
+
+    public setMotorState : (MotorState) ==> ()
+    setMotorState (s) == duration (5e8) ( -- 0.5 sec
+        env_motor_state := s;
+    );
+
+    public getMotorState : () ==> (MotorState)
+    getMotorState () == duration (1e8) ( -- 0.1 sec
+        return env_motor_state;
+    );
+
+    public getArmAngle : () ==> (real)
+    getArmAngle () == duration (1e8) ( -- 0.1 sec
+        return env_q;
+    );
+
+    public setTargetAngle : real ==> ()
+    setTargetAngle (qt) == duration (1e8) ( -- 0.1 sec
+        env_qt := qt;
+    );
+
+    public setErrorCorrection : real ==> ()
+    setErrorCorrection (errorCorr) == duration (0) (
+        env_errorCorrection := errorCorr;
+    );
+
+    public setFinalSimTime : real ==> ()
+    setFinalSimTime (t) == duration (0) (
+        final_sim_time := t;
+    );
+
+    public recordState : () ==> ()
+    recordState() == duration (0) (
+        state_history := state_history ^ [mk_(round(time / 1e9), round(env_q), env_qt)];
+    );
+
+    public isFinished : () ==> ()
+    isFinished() == (skip);
+
+    
+    public round : (real) ==> real
+    round(x) == (
+        dcl y : real := x;
+        y := y * 1000;
+        y := floor y;
+        y := y / 1000;
+        return y
+
+    );
+
+    public step : () ==> ()
+    step() == duration (0) (
+        dcl t : real := time/1e9;
+        dcl delta_t : real := t - last_time;
+        dcl delta_q : real;
+        last_time := t;
+        
+        if env_motor_state = <ON> then (
+            delta_q := delta_t * (env_qt - env_q) *  env_errorCorrection
+        )
+        else
+            delta_q := 0.0;
+         
+        env_q := env_q + delta_q;
+        recordState();
+    ) 
+    pre (N1 <= env_qt and env_qt <= N2)
+    post (env_q >= N1 and  env_q <= N2)
+    
+
+end Robot_arm
