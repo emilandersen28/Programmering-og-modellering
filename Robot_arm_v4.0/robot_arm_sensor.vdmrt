@@ -1,0 +1,27 @@
+class robot_arm_sensor
+
+instance variables
+    private sens_qe : real;
+
+thread
+    periodic (1e8, 0, 0, 0)(monitorArm)
+
+operations
+
+    public robot_arm_sensor : () ==> robot_arm_sensor
+    robot_arm_sensor() == (
+        sens_qe := 0.0;
+    );
+
+    public monitorArm : () ==> ()
+    monitorArm() == (
+        sens_qe := RobotSystem`Robot.getArmAngle();
+    );
+
+    public get_arm_angle : () ==> real
+    get_arm_angle() == (
+        return sens_qe;
+    );
+    
+
+end robot_arm_sensor
