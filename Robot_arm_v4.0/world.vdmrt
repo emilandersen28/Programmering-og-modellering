@@ -2,12 +2,12 @@ class World
 
 operations
 
+    -- scenario 1 : KP = 0.02 slower response less overswing
     public scenario1 : () ==> (seq of (real * real * real))
     scenario1 () == (
-        RobotSystem`Robot.setFinalSimTime(10e9);
+        RobotSystem`Robot.setFinalSimTime(20e9);
         RobotSystem`Robot_controller.setTarget(3.14/4);
-        RobotSystem`Robot_controller.setKPvalue(1);
-        RobotSystem`Robot_controller.setKDvalue(1);
+        RobotSystem`Robot_controller.setKPvalue(0.02);
         RobotSystem`Robot.setMotorState(<ON>);
 
         start(RobotSystem`Robot_arm_motor);
@@ -16,6 +16,23 @@ operations
 
         RobotSystem`Robot.isFinished();
 
+
+        return RobotSystem`Robot.state_history;
+    ); 
+
+    -- Scenario 2 : KP = 0.05 faster response more oversving
+    public scenario2 : () ==> (seq of (real * real * real))
+    scenario2 () == (
+        RobotSystem`Robot.setFinalSimTime(20e9);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        RobotSystem`Robot_controller.setKPvalue(0.05);
+        RobotSystem`Robot.setMotorState(<ON>);
+
+        start(RobotSystem`Robot_arm_motor);
+        start(RobotSystem`Robot_arm_sensor);
+        start(RobotSystem`Robot_controller);
+
+        RobotSystem`Robot.isFinished();
 
         return RobotSystem`Robot.state_history;
     ); 

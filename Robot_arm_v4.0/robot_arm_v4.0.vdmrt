@@ -8,7 +8,7 @@ instance variables
     private env_dq : real;
     private env_ddq : real;
     private env_motor_torque : real;
-    private env_gravity_torque : real;
+    -- private env_gravity_torque : real;
     private env_friction_torque : real;
     private env_inertia : real;
 
@@ -25,7 +25,7 @@ values
     M1 : real = N1 + Q_em;
     M2 : real = N2 + Q_em;
     mass : real = 1.2;
-    gravity : real = -9.81;
+    -- gravity : real = -9.81;
     radius : real = 0.8;
     friction_coulomb : real = 0.1;
     friction_viscous : real = 0.05;
@@ -45,7 +45,7 @@ operations
         env_ddq := 0.0; -- Angular acceleration of joint
         env_qt := 0.0; -- Target an
         env_inertia := mass * radius * radius; -- Mass moment of inertia
-        env_gravity_torque := mass * gravity * radius * MATH`cos(env_q); -- Torque from gravity
+        -- env_gravity_torque := mass * gravity * radius * MATH`cos(env_q); -- Torque from gravity
         env_friction_torque := friction_coulomb * tanh(env_dq) + friction_viscous * env_dq; -- Torque from friction
         env_motor_torque := 0.0; -- Torque from the motor
 
@@ -113,6 +113,7 @@ operations
     adjustArmPosition(motor_torque) == duration (0) (
         dcl t : real := time/1e9;
         dcl delta_t : real := t - last_time;
+        dcl cos : real := MATH`cos(env_q);
         last_time := t;
         env_motor_torque := motor_torque;
         if (env_motor_state = <OFF>) then (
@@ -122,13 +123,16 @@ operations
 
         env_friction_torque := friction_coulomb * tanh(env_dq) + friction_viscous * env_dq;
         
-        env_ddq := (env_motor_torque + env_gravity_torque - env_friction_torque) / env_inertia;
+        -- env_ddq := (env_motor_torque + env_gravity_torque - env_friction_torque) / env_inertia;
+        env_ddq := (env_motor_torque - env_friction_torque) / env_inertia;
         env_dq := env_dq + env_ddq * delta_t;
         env_q := env_q + env_dq * delta_t;
         recordState();
+        
+        -- env_gravity_torque := mass * gravity * radius * MATH`cos(env_q); -- Torque from gravity
     ) 
     pre (N1 <= env_qt and env_qt <= N2)
-    -- post (env_q >= N1 and  env_q <= N2)
+    post (env_q >= N1 and  env_q <= N2)
     
 
 end Robot_arm
