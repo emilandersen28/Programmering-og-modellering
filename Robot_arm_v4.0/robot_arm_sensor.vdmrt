@@ -4,8 +4,11 @@ instance variables
     private sens_qe : real;
 
 thread
-    periodic (1e8, 0, 0, 0)(monitorArm)
+    periodic (1e8, 0, 0, 0)(monitorArm); -- 0.1 sec
 
+sync
+    mutex(monitorArm, getArmAngle);
+    
 operations
 
     public robot_arm_sensor : () ==> robot_arm_sensor
@@ -14,12 +17,12 @@ operations
     );
 
     public monitorArm : () ==> ()
-    monitorArm() == (
+    monitorArm() == duration(0.5e8)( -- 0.1 sec
         sens_qe := RobotSystem`Robot.getArmAngle();
     );
 
-    public get_arm_angle : () ==> real
-    get_arm_angle() == (
+    public getArmAngle : () ==> real
+    getArmAngle() == duration(1e7)( -- 0.01 sec
         return sens_qe;
     );
     

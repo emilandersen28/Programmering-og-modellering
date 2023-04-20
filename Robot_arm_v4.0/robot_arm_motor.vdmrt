@@ -1,20 +1,28 @@
 class robot_arm_motor
     
 instance variables
-    motor_torque : real
+    motor_torque : real;
+    motor_state : Robot_arm`MotorState;
 
 thread
-    periodic (1e8, 0, 0, 0) (step)
+    periodic (1e8, 0, 0, 0) (step) -- 0.1 sec
 
 operations
 
     public robot_arm_motor: () ==> robot_arm_motor
     robot_arm_motor() == (
         motor_torque := 0.0;
+        motor_state := <OFF>;
     );
 
-    public set_motor_torque: (real) ==> ()
-    set_motor_torque(torque) == (
+    public setMotorState: (Robot_arm`MotorState) ==> ()
+    setMotorState(s) == (
+        motor_state := s;
+        RobotSystem`Robot.setMotorState(s);
+    );
+
+    public setMotorTorque: (real) ==> ()
+    setMotorTorque(torque) == (
         motor_torque := torque
     );
 
@@ -23,4 +31,4 @@ operations
         RobotSystem`Robot.adjustArmPosition(motor_torque);
     );
 
-end robot_arm_motor 
+end robot_arm_motor

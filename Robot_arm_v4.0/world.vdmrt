@@ -1,64 +1,17 @@
 class World
 
-instance variables
-    current_time : real := 0.0;
-
 operations
-
-    public UpdateTimeStamp : () ==> ()
-    UpdateTimeStamp () == (
-        current_time := time / 1e9;
-    );
 
     public scenario1 : () ==> (seq of (real * real * real))
     scenario1 () == (
-        RobotSystem`Robot.setErrorCorrection(0.3);
         RobotSystem`Robot.setFinalSimTime(10e9);
         RobotSystem`Robot_controller.setTarget(3.14/4);
+        RobotSystem`Robot_controller.setKPvalue(1);
+        RobotSystem`Robot_controller.setKDvalue(1);
+        RobotSystem`Robot.setMotorState(<ON>);
 
-        start(RobotSystem`Robot);
-        start(RobotSystem`Robot_controller);
-
-        RobotSystem`Robot.isFinished();
-
-
-        return RobotSystem`Robot.state_history;
-    ); 
-    public scenario2 : () ==> (seq of (real * real * real))
-    scenario2 () == (
-        RobotSystem`Robot.setErrorCorrection(3);
-        RobotSystem`Robot.setFinalSimTime(10e9);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-
-        start(RobotSystem`Robot);
-        start(RobotSystem`Robot_controller);
-
-        RobotSystem`Robot.isFinished();
-
-
-        return RobotSystem`Robot.state_history;
-    ); 
-    public scenario3 : () ==> (seq of (real * real * real))
-    scenario3 () == (
-        RobotSystem`Robot.setErrorCorrection(0.8);
-        RobotSystem`Robot.setFinalSimTime(10e9);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-
-        start(RobotSystem`Robot);
-        start(RobotSystem`Robot_controller);
-
-        RobotSystem`Robot.isFinished();
-
-
-        return RobotSystem`Robot.state_history;
-    ); 
-    public scenario4 : () ==> (seq of (real * real * real))
-    scenario4 () == (
-        RobotSystem`Robot.setErrorCorrection(1.7);
-        RobotSystem`Robot.setFinalSimTime(10e9);
-        RobotSystem`Robot_controller.setTarget(3.14/4);
-
-        start(RobotSystem`Robot);
+        start(RobotSystem`Robot_arm_motor);
+        start(RobotSystem`Robot_arm_sensor);
         start(RobotSystem`Robot_controller);
 
         RobotSystem`Robot.isFinished();

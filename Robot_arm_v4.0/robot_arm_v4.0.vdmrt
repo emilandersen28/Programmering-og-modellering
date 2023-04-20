@@ -21,9 +21,9 @@ instance variables
 values
     N1 : real = 0.0;
     N2 : real = 3.14/2;
+    Q_em : real = 0.01;
     M1 : real = N1 + Q_em;
     M2 : real = N2 + Q_em;
-    Q_em : real = 0.01;
     mass : real = 1.2;
     gravity : real = -9.81;
     radius : real = 0.8;
@@ -41,9 +41,9 @@ operations
     public Robot_arm : () ==> Robot_arm
     Robot_arm() == (
         env_q := 0.0; -- angle of joint
-        env_qt := MATH`pi/8; -- Target angle of joint
         env_dq := 0.0; -- Angular velocity of joint
         env_ddq := 0.0; -- Angular acceleration of joint
+        env_qt := 0.0; -- Target an
         env_inertia := mass * radius * radius; -- Mass moment of inertia
         env_gravity_torque := mass * gravity * radius * MATH`cos(env_q); -- Torque from gravity
         env_friction_torque := friction_coulomb * tanh(env_dq) + friction_viscous * env_dq; -- Torque from friction
@@ -71,7 +71,7 @@ operations
     );
 
     public getArmAngle : () ==> (real)
-    getArmAngle () == duration (1e8) ( -- 0.1 sec
+    getArmAngle () == duration (0) ( 
         return env_q;
     );
 
@@ -92,7 +92,7 @@ operations
 
     public recordState : () ==> ()
     recordState() == duration (0) (
-        state_history := state_history ^ [mk_(round(time / 1e9), round(env_q), env_qt)];
+        state_history := state_history ^ [mk_(round(time / 1e9), round(env_q), round(env_motor_torque))];
     );
 
     public isFinished : () ==> ()
@@ -114,14 +114,21 @@ operations
         dcl t : real := time/1e9;
         dcl delta_t : real := t - last_time;
         last_time := t;
+        env_motor_torque := motor_torque;
+        if (env_motor_state = <OFF>) then (
+            env_motor_torque := 0.0;
+        );
+
+
         env_friction_torque := friction_coulomb * tanh(env_dq) + friction_viscous * env_dq;
         
-        env_ddq := (motor_torque + env_gravity_torque - env_friction_torque) / env_inertia;
+        env_ddq := (env_motor_torque + env_gravity_torque - env_friction_torque) / env_inertia;
         env_dq := env_dq + env_ddq * delta_t;
         env_q := env_q + env_dq * delta_t;
+        recordState();
     ) 
     pre (N1 <= env_qt and env_qt <= N2)
-    post (env_q >= N1 and  env_q <= N2)
+    -- post (env_q >= N1 and  env_q <= N2)
     
 
 end Robot_arm
