@@ -20,12 +20,29 @@ operations
         return RobotSystem`Robot.state_history;
     ); 
 
-    -- Scenario 2 : KP = 0.05 faster response more oversving
+    -- Scenario 2 : KP = 0.05 faster response more oversving, bad if close to borders N1 and N2.
     public scenario2 : () ==> (seq of (real * real * real))
     scenario2 () == (
         RobotSystem`Robot.setFinalSimTime(20e9);
         RobotSystem`Robot_controller.setTarget(3.14/4);
         RobotSystem`Robot_controller.setKPvalue(0.05);
+        RobotSystem`Robot.setMotorState(<ON>);
+
+        start(RobotSystem`Robot_arm_motor);
+        start(RobotSystem`Robot_arm_sensor);
+        start(RobotSystem`Robot_controller);
+
+        RobotSystem`Robot.isFinished();
+
+        return RobotSystem`Robot.state_history;
+    ); 
+
+    -- Scenario 3 : KP = 0.1 faster response even more oversving, bad if close to borders N1 and N2.
+    public scenario3 : () ==> (seq of (real * real * real))
+    scenario3 () == (
+        RobotSystem`Robot.setFinalSimTime(100e9);
+        RobotSystem`Robot_controller.setTarget(3.14/4);
+        RobotSystem`Robot_controller.setKPvalue(0.1);
         RobotSystem`Robot.setMotorState(<ON>);
 
         start(RobotSystem`Robot_arm_motor);

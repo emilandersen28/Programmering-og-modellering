@@ -17,7 +17,7 @@ operations
     );
 
     public monitorArm : () ==> ()
-    monitorArm() == duration(0.5e8)( -- 0.1 sec
+    monitorArm() == duration(0.5e8)( -- 0.05 sec
         sens_qe := RobotSystem`Robot.getArmAngle();
     );
 

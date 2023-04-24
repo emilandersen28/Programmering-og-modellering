@@ -4,15 +4,12 @@ types
     
     public OperationMode = <initialisation> | <normal> | <emergency>;
 
-    public Event = <motorFailure> | <motorRepair> | <nuclearStrike>;
-    
 instance variables
 
     private ctl_q : real;
     private ctl_qt : real;
     private ctl_motor_state: Robot_arm`MotorState;
     private ctl_mode : OperationMode;
-    private events : Event;
     private ctl_error : real;
     private ctl_derror : real;
     private last_time : real;
@@ -50,11 +47,6 @@ operations
     public setMode : (OperationMode) ==> ()
     setMode (m) == duration (1e8) ( -- 0.1 sec
         ctl_mode := m;
-    );
-
-    public addEvent : real * Event * int ==> ()
-    addEvent (t,e,d) == duration (0) (
-        events := events ^ [mk_(t,e,d)];
     );
 
     public setMotorState : (Robot_arm`MotorState) ==> ()
@@ -106,6 +98,7 @@ operations
         -- torque := K_p * ctl_error + K_d * ctl_derror;
         ctl_error := ctl_qt - ctl_q;
         torque := K_p * ctl_error;
+        ensureSafeArmPosition();
         RobotSystem`Robot_arm_motor.setMotorTorque(torque);
     );
 

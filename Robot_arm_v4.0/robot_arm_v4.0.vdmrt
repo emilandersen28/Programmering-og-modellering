@@ -3,6 +3,8 @@ class Robot_arm
 types 
     public MotorState = <ON> | <OFF>;
 
+    public Event = <motorFailure> | <motorRepair> | <armStuck> | <armUnstuck>
+
 instance variables
     private env_q : real;
     private env_dq : real;
@@ -11,12 +13,15 @@ instance variables
     -- private env_gravity_torque : real;
     private env_friction_torque : real;
     private env_inertia : real;
-
     private env_qt : real;
     private env_motor_state: MotorState;
     private last_time : real;
     private final_sim_time : real;
-    public state_history : seq of (real * real * real)
+    public state_history : seq of (real * real * real);
+    private events : seq of (real * Event * int);
+    private event_state : Event;
+
+     public log_count : int := 0;
 
 values
     N1 : real = 0.0;
@@ -30,11 +35,17 @@ values
     friction_coulomb : real = 0.1;
     friction_viscous : real = 0.05;
 
+    log_freq : int = 5;
+
 sync
     mutex(getArmAngle, adjustArmPosition); -- getArmAngle and step are mutually exclusive
     mutex(getMotorState, setMotorState); -- getMotorState and setMotorState are mutually exclusive
+    mutex(CreateEvent);
     
     per isFinished => (time > final_sim_time); -- isFinished is true when time > final_sim_time
+
+thread 
+    periodic(1e9, 0, 0, 25e8)(CreateEvent);
 
 
 operations 
@@ -53,6 +64,32 @@ operations
         last_time := 0.0;
         final_sim_time := 0.0;
         state_history := [];
+        events := [];
+    );
+
+    public addEvent : real * Event * int ==> ()
+    addEvent (t,e,d) == duration (0) (
+        events := events ^ [mk_(t,e,d)];
+    );
+
+    public CreateEvent : () ==> ()
+    CreateEvent () == duration(0) (
+        if len events > 0 then (
+            let mk_(stime, event, event_data) = hd events
+            in if stime <= time then (
+                if(event = <motorFailure>) then ( 
+                    RobotSystem`Robot_arm_motor.motorFailed();
+                ) else if (event = <motorRepair>) then (
+                    RobotSystem`Robot_arm_motor.motorRepaired();
+                ) else if (event = <armStuck>) then (
+                    RobotSystem`Robot_arm_motor.armStuck();
+                ) else if (event = <armUnstuck>) then (
+                    RobotSystem`Robot_arm_motor.armUnstuck();
+                );
+
+            events := tl events;
+            )
+        )
     );
 
     public tanh : (real) ==> (real)
@@ -92,7 +129,12 @@ operations
 
     public recordState : () ==> ()
     recordState() == duration (0) (
-        state_history := state_history ^ [mk_(round(time / 1e9), round(env_q), round(env_motor_torque))];
+         if (log_count = log_freq) then ( 
+            -- IO`println("Time: " ^ time/1e9 ^ "s, Angle: " ^ env_q ^ "rad, Angular velocity: " ^ env_dq ^ "rad/s, Angular acceleration: " ^ env_ddq ^ "rad/s^2, Motor torque: " ^ env_motor_torque ^ "Nm, Friction torque: " ^ env_friction_torque ^ "Nm");
+            state_history := state_history ^ [mk_(round(time / 1e9), round(env_q), round(env_motor_torque))];
+            log_count := 0;)
+        else
+            log_count := log_count + 1;
     );
 
     public isFinished : () ==> ()
@@ -113,13 +155,11 @@ operations
     adjustArmPosition(motor_torque) == duration (0) (
         dcl t : real := time/1e9;
         dcl delta_t : real := t - last_time;
-        dcl cos : real := MATH`cos(env_q);
         last_time := t;
         env_motor_torque := motor_torque;
         if (env_motor_state = <OFF>) then (
             env_motor_torque := 0.0;
         );
-
 
         env_friction_torque := friction_coulomb * tanh(env_dq) + friction_viscous * env_dq;
         

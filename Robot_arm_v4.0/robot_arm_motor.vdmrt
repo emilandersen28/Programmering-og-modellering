@@ -3,6 +3,8 @@ class robot_arm_motor
 instance variables
     motor_torque : real;
     motor_state : Robot_arm`MotorState;
+    motor_working : nat; -- 0 means working, 1 means failed
+    motor_stuck : nat; -- 0 means not stuck, 1 means stuck
 
 thread
     periodic (1e8, 0, 0, 0) (step) -- 0.1 sec
@@ -13,6 +15,8 @@ operations
     robot_arm_motor() == (
         motor_torque := 0.0;
         motor_state := <OFF>;
+        motor_working := 1;
+        motor_stuck := 0;
     );
 
     public setMotorState: (Robot_arm`MotorState) ==> ()
@@ -26,9 +30,31 @@ operations
         motor_torque := torque
     );
 
+    public motorFailed : () ==> ()
+    motorFailed() == (
+        motor_working := 0;
+    );
+
+    public motorRepaired : () ==> ()
+    motorRepaired() == (
+        motor_working := 1;
+    );
+
+    public armStuck : () ==> ()
+    armStuck() == (
+        motor_stuck := 1;
+    );
+
+    public armUnstuck : () ==> ()
+    armUnstuck() == (
+        motor_stuck := 0;
+    );
+
     public step : () ==> ()
     step() == (
-        RobotSystem`Robot.adjustArmPosition(motor_torque);
+        if motor_stuck = 0 then (
+            RobotSystem`Robot.adjustArmPosition(motor_torque * motor_working);
+        );
     );
 
 end robot_arm_motor
